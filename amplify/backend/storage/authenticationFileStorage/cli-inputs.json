@@ -1,0 +1,13 @@
+{
+  "resourceName": "authenticationFileStorage",
+  "policyUUID": "51ace1de",
+  "bucketName": "authenticationstorage",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}
