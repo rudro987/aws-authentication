@@ -28,7 +28,7 @@
     }
   },
   "storage": {
-    "authenticationFileStorage": {
+    "profilepicstorage": {
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "S3"

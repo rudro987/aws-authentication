@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import useAuth from "../Hooks/useAuth";
-import { uploadData } from 'aws-amplify/storage';
+import { uploadData, getUrl } from 'aws-amplify/storage';
 
 const Register = () => {
   const { createNewUser } = useAuth();
@@ -11,24 +11,29 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  
   const navigate = useNavigate();
 
-
   const onSubmit = async (data) => {
-    const picture = data.image[0];
 
-    try {
-      const result = uploadData({
-        key: "picturename",
-        data: picture,
-      }).result;
-      console.log('Success: ', result);
-    } catch (error) {
-      console.log('Error : ', error);
-    }
+    const file = data.image[0];
+    let imageUrl = '';
+
+    const result = uploadData({
+      key: file.name,
+      data: file
+    }).result;
+
+    console.log(result.key);
+    
     
     try {
-      const { nextStep } = await createNewUser(data.email, data.password, data.name, data.image[0]);
+      if(result.key){
+        imageUrl = await getUrl(result.key);
+      }
+      const { nextStep } = await createNewUser(data.email, data.password, data.name, imageUrl);
+      console.log(imageUrl);
+      
       if (nextStep?.signUpStep === "CONFIRM_SIGN_UP") {
         Swal.fire({
           icon: "success",

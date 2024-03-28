@@ -11,7 +11,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
-    "authenticationFileStorage": {
+    "profilepicstorage": {
       "BucketName": "string",
       "Region": "string"
     }
