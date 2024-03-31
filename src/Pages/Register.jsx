@@ -1,34 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Storage, Auth } from 'aws-amplify';
-import { AmplifySignUp } from '@aws-amplify/ui-react';
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
   const [imageFile, setImageFile] = useState(null);
 
   const onSubmit = async (data) => {
-    try {
-      // Upload the image file to S3
-      const uploadedImage = await Storage.put(`images/${imageFile.name}`, imageFile, {
-        contentType: imageFile.type,
-      });
-
-      // Sign up the user with the uploaded image key
-      const { user } = await Auth.signUp({
-        username: data.email,
-        password: data.password,
-        attributes: {
-          email: data.email,
-          name: data.name,
-          'custom:profilePicture': uploadedImage.key,
-        },
-      });
-
-      console.log('User signed up successfully:', user);
-    } catch (error) {
-      console.error('Error signing up:', error);
-    }
+    console.log(data);
+    
   };
 
   return (
@@ -69,7 +48,7 @@ const Register = () => {
           type="file"
           id="profilePicture"
           accept="image/*"
-          onChange={(e) => setImageFile(e.target.files[0])}
+          name="image"
         />
       </div>
 
