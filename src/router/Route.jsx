@@ -5,6 +5,7 @@ import UserProfile from "../Pages/UserProfile";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register"
 import Validations from "../Pages/Validations";
+import Test from "../Pages/Test";
 
 const router = createBrowserRouter([
   {
@@ -18,7 +19,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        element: <UserProfile />
+        element: <UserProfile></UserProfile>
       },
       {
         path: "/login",
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "/validations",
         element: <Validations></Validations>
+      },
+      {
+        path: "/test",
+        element: <Test></Test>
       }
     ]
   },

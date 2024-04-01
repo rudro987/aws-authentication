@@ -1,12 +1,11 @@
-import { confirmSignUp, signIn, signUp } from "aws-amplify/auth";
+import { confirmSignUp, signIn, signOut, signUp } from "aws-amplify/auth";
 import { createContext, useEffect, useState } from "react";
-import { Hub } from 'aws-amplify/utils';
+import { Hub } from "aws-amplify/utils";
 
 export const AuthContext = createContext(null);
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  
 
   const handleSignUp = (firstName, lastName, email, password, picture) => {
     setLoading(true);
@@ -18,7 +17,7 @@ const AuthProvider = ({ children }) => {
           email: email,
           given_name: firstName,
           family_name: lastName,
-          picture: picture
+          picture: picture,
         },
         autoSignIn: true, // or SignInOptions e.g { authFlowType: "USER_SRP_AUTH" }
       },
@@ -28,22 +27,56 @@ const AuthProvider = ({ children }) => {
   const handleSignIn = (email, password) => {
     setLoading(true);
     return signIn({ username: email, password });
-  }
+  };
 
   const handleConfirmSignUp = (username, confirmationCode) => {
     setLoading(true);
-    return confirmSignUp({username, confirmationCode});
-  }
+    return confirmSignUp({ username, confirmationCode });
+  };
+
+  const handleSignOut = () => {
+    setLoading(true);
+    localStorage.removeItem("userData");
+    return signOut();
+  };
 
   useEffect(() => {
-    const unSubscribe = Hub.listen('auth', ({ payload }) => {
-        console.log(payload);
-        
-    })
-    return () => unSubscribe();
+    const storedUserData = localStorage.getItem("userData");
+    if (storedUserData) {
+      setUser(JSON.parse(storedUserData));
+      setLoading(false);
+    }
+
+    const hubListenerCancelToken = Hub.listen("auth", ({ payload }) => {
+      console.log(payload);
+      switch (payload.event) {
+        case "signedIn":
+          localStorage.setItem("userData", JSON.stringify(payload.data));
+          setUser(payload.data);
+          setLoading(false);
+          break;
+        case "signedOut":
+          localStorage.removeItem("userData");
+          setUser(null);
+          setLoading(false);
+          break;
+        default:
+          break;
+      }
+    });
+    hubListenerCancelToken();
   }, []);
 
-  const authInfo = { user, loading, handleSignUp, handleSignIn, handleConfirmSignUp };
+  console.log(user);
+
+  const authInfo = {
+    user,
+    loading,
+    handleSignUp,
+    handleSignIn,
+    handleConfirmSignUp,
+    handleSignOut,
+  };
 
   return (
     <div>

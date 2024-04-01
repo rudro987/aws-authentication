@@ -6,10 +6,8 @@ const Validations = () => {
     const {handleConfirmSignUp} = useAuth();
     const onSubmit = async (data) => {
         console.log(data);
-        const { isSignUpComplete, nextStep } = await handleConfirmSignUp(data.email, data.confirmationCode);
+        const { nextStep } = await handleConfirmSignUp(data.email, data.confirmationCode);
         console.log(nextStep);
-        
-        
     }
   return (
     <>
