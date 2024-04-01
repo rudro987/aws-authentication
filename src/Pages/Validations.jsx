@@ -1,40 +1,41 @@
-import { Link } from "react-router-dom";
 import { useForm } from 'react-hook-form';
+import useAuth from '../Hooks/useAuth';
 
 const Validations = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const onSubmit = (data) => {
+    const {handleConfirmSignUp} = useAuth();
+    const onSubmit = async (data) => {
         console.log(data);
+        const { isSignUpComplete, nextStep } = await handleConfirmSignUp(data.email, data.confirmationCode);
+        console.log(nextStep);
+        
         
     }
   return (
     <>
-      <Link to="/">
-        <button className="btn btn-success mb-20">Home</button>
-      </Link>
       <div className="hero min-h-screen bg-base-200">
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
             <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Username</span>
+                  <span className="label-text">Email</span>
                 </label>
                 <input
-                  type="text"
-                  placeholder="User Name"
+                  type="email"
+                  placeholder="Email"
                   className="input input-bordered"
-                  {...register('userName', { required: true })}
+                  {...register('email', { required: true })}
                 />
-                {errors.userName && <span>This field is required</span>}
+                {errors.email && <span>This field is required</span>}
               </div>
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Password</span>
                 </label>
                 <input
-                  type="password"
-                  placeholder="password"
+                  type="text"
+                  placeholder="Confirmation code"
                   className="input input-bordered"
                   {...register('confirmationCode', { required: true })}
                 />

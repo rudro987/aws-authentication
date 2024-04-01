@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-dochousedemoapp-dev-220ef-authRole",
+      "UnauthRoleArn": "arn:aws:iam::139972284545:role/amplify-dochousedemoapp-dev-220ef-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::139972284545:role/amplify-dochousedemoapp-dev-220ef-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-dochousedemoapp-dev-220ef-deployment",
+      "UnauthRoleName": "amplify-dochousedemoapp-dev-220ef-unauthRole",
+      "StackName": "amplify-dochousedemoapp-dev-220ef",
+      "StackId": "arn:aws:cloudformation:us-east-1:139972284545:stack/amplify-dochousedemoapp-dev-220ef/a04f0790-ef75-11ee-8663-0ec25c630b61",
+      "AmplifyAppId": "d2nsodau1uddpq"
+    },
+    "categories": {
+      "auth": {
+        "dochousedemoapp0b50d1c0": {}
+      },
+      "storage": {
+        "dochousedemostorage": {}
+      }
+    }
+  }
+}

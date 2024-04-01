@@ -1,59 +1,120 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import useAuth from "../Hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Register = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
   const [imageFile, setImageFile] = useState(null);
+
+  const {loading, handleSignUp} = useAuth();
 
   const onSubmit = async (data) => {
     console.log(data);
+    console.log(data.image[0].name);
+    const { nextStep } = await handleSignUp(data.firstName, data.lastName, data.email, data.password, data.image[0].name);
+    console.log(nextStep);
     
+    switch (nextStep.signUpStep) {
+      case "CONFIRM_SIGN_UP": 
+      Swal.fire({
+        title: "Need validation",
+        text: "Please check your email for validation code!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Go to validations >"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/validations");
+        }
+      });
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <label htmlFor="name">Name</label>
-        <input
-          type="text"
-          id="name"
-          {...register('name', { required: true })}
-        />
-        {errors.name && <span>Name is required</span>}
+    <div className="hero min-h-screen bg-base-200">
+      <div className="hero-content flex-col lg:flex-row-reverse">
+        <div className="text-center lg:text-left">
+          <h1 className="text-5xl font-bold">Register now!</h1>
+        </div>
+        <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+          <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">First Name</span>
+              </label>
+              <input
+                type="text"
+                placeholder="First Name"
+                className="input input-bordered"
+                {...register('firstName', {required: true})}
+              />
+              {errors.firstName && <span className="text-red-600">This field is required</span>}
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Last Name</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Last Name"
+                className="input input-bordered"
+                {...register('lastName', {required: true})}
+              />
+              {errors.lastName && <span className="text-red-600">This field is required</span>}
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Image</span>
+              </label>
+              <input
+                type="file"
+                placeholder="profile pic"
+                className="input input-bordered"
+                {...register('image', {required: true})}
+              />
+              {errors.image && <span className="text-red-600">This field is required</span>}
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Email</span>
+              </label>
+              <input
+                type="email"
+                placeholder="email"
+                className="input input-bordered"
+                {...register('email', {required: true})}
+              />
+              {errors.email && <span className="text-red-600">This field is required</span>}
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Password</span>
+              </label>
+              <input
+                type="password"
+                placeholder="password"
+                className="input input-bordered"
+                {...register('password', {required: true})}
+              />
+              {errors.password && <span className="text-red-600">This field is required</span>}
+            </div>
+            <div className="form-control mt-6">
+              <button className="btn btn-info">Register</button>
+            </div>
+          </form>
+        </div>
       </div>
-
-      <div>
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          {...register('email', { required: true })}
-        />
-        {errors.email && <span>Email is required</span>}
-      </div>
-
-      <div>
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          {...register('password', { required: true })}
-        />
-        {errors.password && <span>Password is required</span>}
-      </div>
-
-      <div>
-        <label htmlFor="profilePicture">Profile Picture</label>
-        <input
-          type="file"
-          id="profilePicture"
-          accept="image/*"
-          name="image"
-        />
-      </div>
-
-      <button type="submit">Sign Up</button>
-    </form>
+    </div>
   );
 };
 
